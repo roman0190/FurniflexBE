@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FurniflexBE.Context;
@@ -28,29 +30,88 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(int id)
         {
+            // Find the user by ID
             User user = await db.users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(user);
+            // Assuming ProfilePicture contains the relative path, e.g. "uploads/image.jpg"
+            // Construct the full URL for the profile picture
+            string baseUrl = $"{Request.RequestUri.Scheme}://{Request.RequestUri.Host}:{Request.RequestUri.Port}/"; // Base URL
+            string fullImageUrl = string.IsNullOrEmpty(user.ProfilePicture) ? null : baseUrl + user.ProfilePicture;
+
+            // Create a new object to include the user data and the full image URL
+            var userDto = new
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                phone = user.phone,
+                location = user.location,
+                ProfilePictureUrl = fullImageUrl // Send the full URL of the profile picture
+            };
+
+            // Return the modified user object
+            return Ok(userDto);
         }
 
         // PUT: api/Users/5
+        [HttpPut]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutUser(int id, User user)
+        public async Task<IHttpActionResult> PutUser(int id)
         {
+            // Check if the user exists
+            var user = await db.users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Get the multipart form data
+            var httpRequest = HttpContext.Current.Request;
+
+            // Check if there's a file uploaded
+            if (httpRequest.Files.Count > 0)
+            {
+                var file = httpRequest.Files[0];
+                if (file != null && file.ContentLength > 0)
+                {
+                    // Generate a unique filename
+                    var fileName = Path.GetFileName(file.FileName);
+                    var uploadsDirectory = HttpContext.Current.Server.MapPath("~/Uploads");
+
+                    // Ensure the uploads directory exists
+                    if (!Directory.Exists(uploadsDirectory))
+                    {
+                        Directory.CreateDirectory(uploadsDirectory);
+                    }
+
+                    // Save the file to the server
+                    var filePath = Path.Combine(uploadsDirectory, fileName);
+                    file.SaveAs(filePath);
+
+                    // Save the file path to the user's profile picture
+                    user.ProfilePicture = "/Uploads/" + fileName; // Adjust this path based on your hosting structure
+                }
+            }
+
+            // Update other user properties
+            user.FirstName = httpRequest.Form["FirstName"];
+            user.LastName = httpRequest.Form["LastName"];
+            user.Email = httpRequest.Form["Email"];
+            user.phone = httpRequest.Form["phone"];
+            user.location = httpRequest.Form["location"];
+
+            // Validate model state
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
-
+            // Update the user in the database
             db.Entry(user).State = EntityState.Modified;
 
             try
@@ -71,6 +132,9 @@ namespace FurniflexBE.Controllers
 
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+
+
 
         // POST: api/Users
         [ResponseType(typeof(User))]

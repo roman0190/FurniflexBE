@@ -31,6 +31,10 @@ namespace FurniflexBE.Models
         [StringLength(255)]
         public string ProfilePicture { get; set; }
 
+        public string location { get; set; }
+
+        public string phone { get; set; }
+
         [Required]
         [StringLength(50)]
         public string Role { get; set; } // "admin" or "customer"
