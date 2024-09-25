@@ -39,19 +39,28 @@ namespace FurniflexBE.Controllers
 
         // PUT: api/Carts/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutCart(int id, Cart cart)
+        public async Task<IHttpActionResult> PutCart(int id, int changeValue)
         {
-            if (!ModelState.IsValid)
+
+
+            var cart =await db.carts.FindAsync(id);
+            if(cart == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            if (id != cart.CartId)
+            cart.Quantity += changeValue;
+
+            if (cart.Quantity < 1)
             {
-                return BadRequest();
+
+                db.carts.Remove(cart);
             }
+            else
+            {
 
             db.Entry(cart).State = EntityState.Modified;
+            }
 
             try
             {
@@ -69,7 +78,7 @@ namespace FurniflexBE.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.OK);
         }
 
         // POST: api/Carts
@@ -81,11 +90,53 @@ namespace FurniflexBE.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Add the cart to the database
             db.carts.Add(cart);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = cart.CartId }, cart);
+            // Fetch the product and user again, and include their relationships (eager loading)
+            var product = await db.products.FindAsync(cart.ProductId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            var user = await db.users
+                .Include(u => u.CartItems)  // Eagerly load cart items
+                .FirstOrDefaultAsync(u => u.UserId == cart.UserId);
+
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            // Map the loaded user and product back to the cart
+            cart.User = user;
+            cart.Product = product;
+
+            // Return the newly created cart with the updated user and product
+            return CreatedAtRoute("DefaultApi", new { id = cart.CartId }, new
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                ProductId = cart.ProductId,
+                ProductName = product.Name,
+                Quantity = cart.Quantity,
+                User = new
+                {
+                    user.UserId,
+                    user.FirstName,
+                    user.LastName,
+                    CartItems = user.CartItems.Select(c => new
+                    {
+                        c.CartId,
+                        c.ProductId,
+                        ProductName = c.Product.Name,
+                        c.Quantity
+                    }).ToList()
+                }
+            });
         }
+
 
         // DELETE: api/Carts/5
         [ResponseType(typeof(Cart))]
@@ -96,6 +147,8 @@ namespace FurniflexBE.Controllers
             {
                 return NotFound();
             }
+
+            var userId = cart.User.UserId;
 
             db.carts.Remove(cart);
             await db.SaveChangesAsync();

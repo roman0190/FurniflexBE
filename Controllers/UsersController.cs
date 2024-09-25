@@ -43,16 +43,40 @@ namespace FurniflexBE.Controllers
             string fullImageUrl = string.IsNullOrEmpty(user.ProfilePicture) ? null : baseUrl + user.ProfilePicture;
 
             // Create a new object to include the user data and the full image URL
+
+            var cartItems = await db.carts
+                .Where(c => c.UserId == id)
+                .Select(c => new
+                {
+                    c.CartId,
+                    c.Quantity,
+                    c.ProductId,
+
+                    Product = new
+                    {
+                        c.Product.ProductId,
+                        c.Product.Name,
+                        c.Product.ImgUrl,
+                        c.Product.DiscountedPrice,
+                        c.Product.Description
+                    }
+                })
+                .ToListAsync();
+
+            // Create a new object to include the user data, cart items (empty if none), and the full image URL
             var userDto = new
             {
                 UserId = user.UserId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                phone = user.phone,
-                location = user.location,
-                ProfilePictureUrl = fullImageUrl // Send the full URL of the profile picture
+                Phone = user.Phone,
+                Location = user.Location,
+                ProfilePictureUrl = fullImageUrl, // Send the full URL of the profile picture
+                CartItems =  cartItems 
             };
+
+
 
             // Return the modified user object
             return Ok(userDto);
@@ -102,8 +126,8 @@ namespace FurniflexBE.Controllers
             user.FirstName = httpRequest.Form["FirstName"];
             user.LastName = httpRequest.Form["LastName"];
             user.Email = httpRequest.Form["Email"];
-            user.phone = httpRequest.Form["phone"];
-            user.location = httpRequest.Form["location"];
+            user.Phone = httpRequest.Form["Phone"];
+            user.Location = httpRequest.Form["Location"];
 
             // Validate model state
             if (!ModelState.IsValid)

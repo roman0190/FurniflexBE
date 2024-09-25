@@ -31,9 +31,9 @@ namespace FurniflexBE.Models
         [StringLength(255)]
         public string ProfilePicture { get; set; }
 
-        public string location { get; set; }
+        public string Location { get; set; }
 
-        public string phone { get; set; }
+        public string Phone { get; set; }
 
         [Required]
         [StringLength(50)]
