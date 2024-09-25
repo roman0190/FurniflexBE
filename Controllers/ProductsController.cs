@@ -145,6 +145,40 @@ namespace FurniflexBE.Controllers
             return Ok(product);
         }
 
+
+
+        // GET: api/Products/5/Image
+        [HttpGet]
+        [Route("api/Products/{id:int}/Image")]
+        public IHttpActionResult GetProductImage(int id)
+        {
+            // Fetch the product from the database
+            var product = db.products.Find(id);
+            if (product == null)
+            {
+                return NotFound(); // Return 404 if the product doesn't exist
+            }
+
+            // Get the image path from the product
+            string imagePath = HttpContext.Current.Server.MapPath(product.ImgUrl);
+
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound(); // Return 404 if the image file doesn't exist
+            }
+
+            // Return the image file as a response
+            var imageFile = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(imageFile)
+            };
+            result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+            return ResponseMessage(result);
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
