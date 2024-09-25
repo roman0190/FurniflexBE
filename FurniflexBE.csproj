@@ -209,6 +209,10 @@
     <Compile Include="Migrations\202409241619106_all4.Designer.cs">
       <DependentUpon>202409241619106_all4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409250953099_changedCase.cs" />
+    <Compile Include="Migrations\202409250953099_changedCase.Designer.cs">
+      <DependentUpon>202409250953099_changedCase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -296,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409241619106_all4.resx">
       <DependentUpon>202409241619106_all4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409250953099_changedCase.resx">
+      <DependentUpon>202409250953099_changedCase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

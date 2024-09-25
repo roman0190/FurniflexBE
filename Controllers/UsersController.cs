@@ -41,7 +41,7 @@ namespace FurniflexBE.Controllers
             string baseUrl = $"{Request.RequestUri.Scheme}://{Request.RequestUri.Host}:{Request.RequestUri.Port}/"; // Base URL
             string fullImageUrl = string.IsNullOrEmpty(user.ProfilePicture) ? null : baseUrl + user.ProfilePicture;
 
-            
+            // Create a new object to include the user data and the full image URL
             var userDto = new
             {
                 UserId = user.UserId,
@@ -50,9 +50,10 @@ namespace FurniflexBE.Controllers
                 Email = user.Email,
                 phone = user.phone,
                 location = user.location,
-                ProfilePictureUrl = fullImageUrl 
+                ProfilePictureUrl = fullImageUrl // Send the full URL of the profile picture
             };
 
+            // Return the modified user object
             return Ok(userDto);
         }
 
@@ -93,8 +94,8 @@ namespace FurniflexBE.Controllers
             user.FirstName = httpRequest.Form["FirstName"];
             user.LastName = httpRequest.Form["LastName"];
             user.Email = httpRequest.Form["Email"];
-            user.phone = httpRequest.Form["phone"];
-            user.location = httpRequest.Form["location"];
+            user.Phone = httpRequest.Form["Phone"];
+            user.Location = httpRequest.Form["Location"];
 
             if (!ModelState.IsValid)
             {

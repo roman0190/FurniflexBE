@@ -30,5 +30,9 @@ namespace FurniflexBE.Models
 
         // Navigation Property
         public virtual Order Order { get; set; } // Each cart item can belong to an order
+
+       
+
+
     }
 }
