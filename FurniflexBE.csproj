@@ -193,25 +193,13 @@
     <Compile Include="Migrations\202409202004028_all.Designer.cs">
       <DependentUpon>202409202004028_all.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202409241453224_all1.cs" />
-    <Compile Include="Migrations\202409241453224_all1.Designer.cs">
-      <DependentUpon>202409241453224_all1.cs</DependentUpon>
+    <Compile Include="Migrations\202409252114447_all1.cs" />
+    <Compile Include="Migrations\202409252114447_all1.Designer.cs">
+      <DependentUpon>202409252114447_all1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202409241454414_all2.cs" />
-    <Compile Include="Migrations\202409241454414_all2.Designer.cs">
-      <DependentUpon>202409241454414_all2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202409241616428_all3.cs" />
-    <Compile Include="Migrations\202409241616428_all3.Designer.cs">
-      <DependentUpon>202409241616428_all3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202409241619106_all4.cs" />
-    <Compile Include="Migrations\202409241619106_all4.Designer.cs">
-      <DependentUpon>202409241619106_all4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202409250953099_changedCase.cs" />
-    <Compile Include="Migrations\202409250953099_changedCase.Designer.cs">
-      <DependentUpon>202409250953099_changedCase.cs</DependentUpon>
+    <Compile Include="Migrations\202409252116004_all2.cs" />
+    <Compile Include="Migrations\202409252116004_all2.Designer.cs">
+      <DependentUpon>202409252116004_all2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -289,20 +277,11 @@
     <EmbeddedResource Include="Migrations\202409202004028_all.resx">
       <DependentUpon>202409202004028_all.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202409241453224_all1.resx">
-      <DependentUpon>202409241453224_all1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202409252114447_all1.resx">
+      <DependentUpon>202409252114447_all1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202409241454414_all2.resx">
-      <DependentUpon>202409241454414_all2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202409241616428_all3.resx">
-      <DependentUpon>202409241616428_all3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202409241619106_all4.resx">
-      <DependentUpon>202409241619106_all4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202409250953099_changedCase.resx">
-      <DependentUpon>202409250953099_changedCase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202409252116004_all2.resx">
+      <DependentUpon>202409252116004_all2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

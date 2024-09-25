@@ -13,7 +13,7 @@ namespace FurniflexBE.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202409241453224_all1"; }
+            get { return "202409252114447_all1"; }
         }
         
         string IMigrationMetadata.Source

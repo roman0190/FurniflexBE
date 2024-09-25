@@ -30,9 +30,9 @@ namespace FurniflexBE.Models
 
         [StringLength(255)]
         public string ProfilePicture { get; set; }
-
+        [Required]
         public string Location { get; set; }
-
+        [Required]
         public string Phone { get; set; }
 
         [Required]
