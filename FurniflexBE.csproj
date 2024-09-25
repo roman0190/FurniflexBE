@@ -201,6 +201,10 @@
     <Compile Include="Migrations\202409252116004_all2.Designer.cs">
       <DependentUpon>202409252116004_all2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409252119302_MigrationName.cs" />
+    <Compile Include="Migrations\202409252119302_MigrationName.Designer.cs">
+      <DependentUpon>202409252119302_MigrationName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -282,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409252116004_all2.resx">
       <DependentUpon>202409252116004_all2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409252119302_MigrationName.resx">
+      <DependentUpon>202409252119302_MigrationName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
