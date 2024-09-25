@@ -41,38 +41,91 @@ namespace FurniflexBE.Controllers
 
         // PUT: api/Products/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutProduct(int id, Product product)
+        public async Task<IHttpActionResult> PutProduct(int id)
         {
-            if (!ModelState.IsValid)
+            if (!Request.Content.IsMimeMultipartContent())
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid request. Expected multipart content.");
             }
 
-            if (id != product.ProductId)
-            {
-                return BadRequest();
-            }
+            var root = HttpContext.Current.Server.MapPath("~/ProductImages");
+            Directory.CreateDirectory(root);  // Ensure directory exists
 
-            db.Entry(product).State = EntityState.Modified;
+            var provider = new MultipartFormDataStreamProvider(root);
 
             try
             {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                await Request.Content.ReadAsMultipartAsync(provider);
 
-            return StatusCode(HttpStatusCode.NoContent);
+                var formData = provider.FormData;
+
+                Product product = new Product
+                {
+                    ProductId = id,
+                    Name = formData["Name"],
+                    CategoryId = int.Parse(formData["CategoryId"]),
+                    DiscountedPrice = decimal.Parse(formData["DiscountedPrice"]),
+                    Discount = int.Parse(formData["Discount"]),
+                    Description = formData["Description"],
+                    Quantity = int.Parse(formData["Quantity"]),
+                    ImgUrl = formData["ImgUrl"]
+                };
+
+                if (provider.FileData.Count > 0)
+                {
+                    var file = provider.FileData[0];
+                    var extension = Path.GetExtension(file.Headers.ContentDisposition.FileName.Trim('"')).ToLower();
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        return BadRequest("Invalid image file type.");
+                    }
+
+                    string fileName = Guid.NewGuid() + extension;
+                    string filePath = Path.Combine(root, fileName);
+                    File.Move(file.LocalFileName, filePath);
+                    product.ImgUrl = "/ProductImages/" + fileName;
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (id != product.ProductId)
+                {
+                    return BadRequest("Product ID mismatch.");
+                }
+
+                db.Entry(product).State = EntityState.Modified;
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return Ok("Product updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
+
+
+
         // POST: api/Products
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> PostProduct()
@@ -129,8 +182,8 @@ namespace FurniflexBE.Controllers
         }
 
 
-        // DELETE: api/Products/5  using................
-        [ResponseType(typeof(Product))]
+        // DELETE: api/Products/5
+        [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> DeleteProduct(int id)
         {
             Product product = await db.products.FindAsync(id);
@@ -142,7 +195,7 @@ namespace FurniflexBE.Controllers
             db.products.Remove(product);
             await db.SaveChangesAsync();
 
-            return Ok(product);
+            return Ok("Product deleted successfully!");
         }
 
 

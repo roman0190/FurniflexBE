@@ -36,25 +36,39 @@ namespace FurniflexBE.Controllers
             {
                 return NotFound();
             }
+            return Ok(user);
+        }
 
-          
-            string baseUrl = $"{Request.RequestUri.Scheme}://{Request.RequestUri.Host}:{Request.RequestUri.Port}/"; // Base URL
-            string fullImageUrl = string.IsNullOrEmpty(user.ProfilePicture) ? null : baseUrl + user.ProfilePicture;
 
-            // Create a new object to include the user data and the full image URL
-            var userDto = new
+        // GET: api/Users/{id:int}/Image
+        [HttpGet]
+        [Route("api/Users/{id:int}/Image")]
+        public IHttpActionResult GetUserImage(int id)
+        {
+            var user = db.users.Find(id);
+            if (user == null)
             {
-                UserId = user.UserId,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                phone = user.phone,
-                location = user.location,
-                ProfilePictureUrl = fullImageUrl // Send the full URL of the profile picture
+                return NotFound();
+            }
+
+            // Assuming the ProfilePicture property contains the relative path to the image
+            string imagePath = HttpContext.Current.Server.MapPath(user.ProfilePicture);
+
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound();
+            }
+
+            var imageFile = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(imageFile)
             };
 
-            // Return the modified user object
-            return Ok(userDto);
+            // Adjust the ContentType based on the image type you are serving
+            result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+            return ResponseMessage(result);
         }
 
         // PUT: api/Users/5  using..........
