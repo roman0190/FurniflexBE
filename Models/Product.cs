@@ -23,7 +23,7 @@ namespace FurniflexBE.Models
         public int CategoryId { get; set; } // Foreign key to Category
 
         // Navigation Property
-        [Required(ErrorMessage = "Category is required")]
+        /*[Required(ErrorMessage = "Category is required")]*/
         public virtual Category Category { get; set; } // Navigation property to Category
 
         [Required(ErrorMessage = "Discounted price is required")]
