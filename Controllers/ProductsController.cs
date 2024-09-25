@@ -158,7 +158,7 @@ namespace FurniflexBE.Controllers
 
 
 
-
+        // GET: api/Products/5/Image
         [HttpGet]
         [Route("api/Products/{id:int}/Image")]
         public IHttpActionResult GetProductImage(int id)
