@@ -77,38 +77,32 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> PostProduct()
         {
-            // Create a new Product instance
+           
             Product product = new Product();
 
             try
             {
-                // Get the current HTTP request
+               
                 var httpRequest = HttpContext.Current.Request;
 
-                // Check if any files were uploaded
                 if (httpRequest.Files.Count == 0)
                 {
                     return BadRequest("No image file uploaded.");
                 }
 
-                // Get the uploaded file
                 var postedFile = httpRequest.Files[0];
 
-                // Define the directory to save the image
                 var imageFolder = HttpContext.Current.Server.MapPath("~/Images/Products/");
                 var fileName = Path.GetFileName(postedFile.FileName);
                 var fullPath = Path.Combine(imageFolder, fileName);
 
-                // Create the directory if it does not exist
                 if (!Directory.Exists(imageFolder))
                 {
                     Directory.CreateDirectory(imageFolder);
                 }
 
-                // Save the uploaded file to the server
                 postedFile.SaveAs(fullPath);
 
-                // Set product properties from the form data
                 product.Name = httpRequest.Form["Name"];
                 product.ImgUrl = $"/Images/Products/{fileName}";
                 product.CategoryId = int.Parse(httpRequest.Form["CategoryId"]);
@@ -117,25 +111,20 @@ namespace FurniflexBE.Controllers
                 product.Description = httpRequest.Form["Description"];
                 product.Quantity = int.Parse(httpRequest.Form["Quantity"]);
 
-                // Validate the model state
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                // Add the product to the database
                 db.products.Add(product);
                 await db.SaveChangesAsync();
 
-                // Return a 201 Created response
                 return CreatedAtRoute("DefaultApi", new { id = product.ProductId }, product);
             }
             catch (Exception ex)
             {
-                // Log the exception (optional, but recommended for debugging)
-                // Logger.LogError(ex); // If you have a logging mechanism in place
 
-                return InternalServerError(ex); // Return 500 Internal Server Error
+                return InternalServerError(ex); 
             }
         }
 
