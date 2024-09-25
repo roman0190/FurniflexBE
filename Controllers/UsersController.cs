@@ -26,7 +26,7 @@ namespace FurniflexBE.Controllers
             return db.users;
         }
 
-        // GET: api/Users/5
+        // GET: api/Users/5  using..........
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(int id)
         {
@@ -58,7 +58,7 @@ namespace FurniflexBE.Controllers
             return Ok(userDto);
         }
 
-        // PUT: api/Users/5
+        // PUT: api/Users/5  using..........
         [HttpPut]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutUser(int id)
