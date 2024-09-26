@@ -30,14 +30,15 @@ namespace FurniflexBE.Models
 
         [StringLength(255)]
         public string ProfilePicture { get; set; }
-       
         public string Location { get; set; }
-       
-        public string Phone { get; set; }
 
+        public string Phone { get; set; }
+        public string Key { get; set; }
+
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; } = DateTime.Now; 
 
         public int RoleId { get; set; } 
-
 
 
         // Navigation Properties

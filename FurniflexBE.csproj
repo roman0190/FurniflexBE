@@ -223,6 +223,18 @@
     <Compile Include="Migrations\202409260021286_fix-migration.Designer.cs">
       <DependentUpon>202409260021286_fix-migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409260753490_roleTable.cs" />
+    <Compile Include="Migrations\202409260753490_roleTable.Designer.cs">
+      <DependentUpon>202409260753490_roleTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409260845448_newColumn_for_User.cs" />
+    <Compile Include="Migrations\202409260845448_newColumn_for_User.Designer.cs">
+      <DependentUpon>202409260845448_newColumn_for_User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409260847546_newColumn_for_User1.cs" />
+    <Compile Include="Migrations\202409260847546_newColumn_for_User1.Designer.cs">
+      <DependentUpon>202409260847546_newColumn_for_User1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -318,6 +330,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409260021286_fix-migration.resx">
       <DependentUpon>202409260021286_fix-migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409260753490_roleTable.resx">
+      <DependentUpon>202409260753490_roleTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409260845448_newColumn_for_User.resx">
+      <DependentUpon>202409260845448_newColumn_for_User.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409260847546_newColumn_for_User1.resx">
+      <DependentUpon>202409260847546_newColumn_for_User1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
