@@ -7,13 +7,13 @@ namespace FurniflexBE.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class all3 : IMigrationMetadata
+    public sealed partial class all1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(all3));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(all1));
         
         string IMigrationMetadata.Id
         {
-            get { return "202409241616428_all3"; }
+            get { return "202409252114447_all1"; }
         }
         
         string IMigrationMetadata.Source

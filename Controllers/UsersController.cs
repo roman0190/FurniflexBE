@@ -113,8 +113,8 @@ namespace FurniflexBE.Controllers
             user.FirstName = httpRequest.Form["FirstName"];
             user.LastName = httpRequest.Form["LastName"];
             user.Email = httpRequest.Form["Email"];
-            user.Phone = httpRequest.Form["Phone"];
-            user.Location = httpRequest.Form["Location"];
+            user.Phone = httpRequest.Form["phone"];
+            user.Location = httpRequest.Form["location"];
 
             if (!ModelState.IsValid)
             {
