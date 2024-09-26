@@ -238,11 +238,14 @@
     <Compile Include="Controllers\OrderItemsController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ResetPasswordController.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTOModels\ForgotPasswordDTO.cs" />
     <Compile Include="DTOModels\LoginDTOModel.cs" />
+    <Compile Include="DTOModels\ResetPasswordDTO.cs" />
     <Compile Include="Functions\IdentityHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -352,6 +355,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\PasswordReset\" />
     <Folder Include="Views\Roles\" />
   </ItemGroup>
   <ItemGroup>
