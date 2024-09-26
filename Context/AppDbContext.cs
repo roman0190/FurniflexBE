@@ -31,6 +31,8 @@ namespace FurniflexBE.Context
 
         public DbSet<Review> reviews { get; set; }
 
+        public DbSet<Role> roles { get; set; }
+
 
 
         // Add a DbSet for each entity type that you want to include in your model. For more information 

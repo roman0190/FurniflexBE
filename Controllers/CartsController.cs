@@ -130,6 +130,7 @@ namespace FurniflexBE.Controllers
                     {
                         c.CartId,
                         c.ProductId,
+                        c.Product,
                         ProductName = c.Product.Name,
                         c.Quantity
                     }).ToList()

@@ -13,6 +13,9 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using FurniflexBE.Context;
 using FurniflexBE.Models;
+using BCrypt.Net;
+using FurniflexBE.DTOModels;
+using System.Data.Entity.Validation;
 
 namespace FurniflexBE.Controllers
 {
@@ -27,6 +30,8 @@ namespace FurniflexBE.Controllers
         }
 
         // GET: api/Users/5  using..........
+        [HttpGet]
+        [Route("api/Users/{id:int}", Name = "GetUser")]
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(int id)
         {
@@ -73,10 +78,10 @@ namespace FurniflexBE.Controllers
 
         // PUT: api/Users/5  using..........
         [HttpPut]
+        [Route("api/Users/{id:int}", Name = "PutUser")]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutUser(int id)
         {
-            
             var user = await db.users.FindAsync(id);
             if (user == null)
             {
@@ -101,7 +106,7 @@ namespace FurniflexBE.Controllers
                     var filePath = Path.Combine(uploadsDirectory, fileName);
                     file.SaveAs(filePath);
 
-                    user.ProfilePicture = "/Uploads/" + fileName; 
+                    user.ProfilePicture = "/Uploads/" + fileName;
                 }
             }
 
@@ -122,6 +127,19 @@ namespace FurniflexBE.Controllers
             {
                 await db.SaveChangesAsync();
             }
+            catch (DbEntityValidationException ex)
+            {
+                // Log validation errors
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                    }
+                }
+
+                return InternalServerError(ex);
+            }
             catch (DbUpdateConcurrencyException)
             {
                 if (!UserExists(id))
@@ -140,22 +158,12 @@ namespace FurniflexBE.Controllers
 
 
 
-        // POST: api/Users
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> PostUser(User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            db.users.Add(user);
-            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = user.UserId }, user);
-        }
 
         // DELETE: api/Users/5
+        [HttpDelete]
+        [Route("api/Users/{id:int}", Name = "DeleteUser")]
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> DeleteUser(int id)
         {

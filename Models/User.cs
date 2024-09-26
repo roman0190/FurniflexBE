@@ -35,11 +35,13 @@ namespace FurniflexBE.Models
 
         public string Phone { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string Role { get; set; } // "admin" or "customer"
+
+        public int RoleId { get; set; } 
+
+
 
         // Navigation Properties
+        public virtual Role Role { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Cart> CartItems { get; set; }
