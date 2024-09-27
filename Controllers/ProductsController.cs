@@ -181,6 +181,27 @@ namespace FurniflexBE.Controllers
             }
         }
 
+        // GET: api/Products/ByName?name=ProductName
+        [HttpGet]
+        [Route("api/Products/ByName")]
+        [ResponseType(typeof(Product))]
+        public async Task<IHttpActionResult> GetProductByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Product name cannot be empty.");
+            }
+
+            var product = await db.products.FirstOrDefaultAsync(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
+
 
         // DELETE: api/Products/5
         [ResponseType(typeof(void))]

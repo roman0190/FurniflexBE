@@ -16,7 +16,14 @@ namespace FurniflexBE.Controllers
 {
     public class CategoriesController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        AppDbContext db; 
+
+        public CategoriesController()
+        {
+            db = new AppDbContext();
+        }
+
+
 
         // GET: api/Categories
         public IQueryable<Category> Getcategories()
@@ -51,6 +58,14 @@ namespace FurniflexBE.Controllers
                 return BadRequest();
             }
 
+            // Check if category with the same name already exists (but is not the current category being edited)
+            var existingCategory = await db.categories
+                                          .FirstOrDefaultAsync(c => c.Name == category.Name && c.CategoryId != id);
+            if (existingCategory != null)
+            {
+                return BadRequest("A category with the same name already exists.");
+            }
+
             db.Entry(category).State = EntityState.Modified;
 
             try
@@ -81,11 +96,20 @@ namespace FurniflexBE.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Check if a category with the same name already exists
+            var existingCategory = await db.categories.FirstOrDefaultAsync(c => c.Name == category.Name);
+            if (existingCategory != null)
+            {
+                return Conflict(); // Return 409 Conflict if category already exists
+            }
+
+            // If category doesn't exist, add new category
             db.categories.Add(category);
             await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = category.CategoryId }, category);
         }
+
 
         // DELETE: api/Categories/5
         [ResponseType(typeof(Category))]
