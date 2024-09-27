@@ -243,6 +243,7 @@
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTOModels\ChangePasswordDTOModel.cs" />
     <Compile Include="DTOModels\ForgotPasswordDTO.cs" />
     <Compile Include="DTOModels\LoginDTOModel.cs" />
     <Compile Include="DTOModels\ResetPasswordDTO.cs" />

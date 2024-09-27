@@ -51,6 +51,10 @@ namespace FurniflexBE.Controllers
                 return NotFound();
             }
 
+            if (!BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password))
+            {
+                return Unauthorized(); // Incorrect password
+            }
 
             var jwt_token = GetToken(user);
             // Create a response object that includes only the necessary properties
@@ -165,6 +169,36 @@ namespace FurniflexBE.Controllers
                 }
             };
             return CreatedAtRoute("GetUser", new { id = user.UserId }, response);
+        }
+
+
+
+        [Authorize]
+        [HttpPost, Route("api/Auth/ChangePassword")]
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordDTOModel model)
+        {
+            var userId = IdentityHelper.GetUserId(User.Identity as ClaimsIdentity);
+
+
+            var user = await db.users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Verify current password
+            if (!BCrypt.Net.BCrypt.Verify(model.CurrentPassword, user.Password))
+            {
+                return BadRequest("Current password is incorrect.");
+            }
+
+            // Hash the new password
+            user.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+            db.Entry(user).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+
+            return Ok(new { message = "Password changed successfully." });
         }
 
 
