@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace FurniflexBE.Models
 {
@@ -14,9 +11,6 @@ namespace FurniflexBE.Models
 
         [Required]
         public int UserId { get; set; } // Foreign key to User
-
-        [ForeignKey("UserId")]
-        public virtual User User { get; set; }
 
         [Required(ErrorMessage = "Total price is required")]
         [Range(0, double.MaxValue, ErrorMessage = "Total price must be a positive value")]
@@ -33,7 +27,10 @@ namespace FurniflexBE.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // Navigation Property
-        public virtual ICollection<Cart> CartItems { get; set; }
+        // Navigation Property for User
+        public virtual User User { get; set; }
+
+        // Navigation Property for OrderItems
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace FurniflexBE.Models
 {
@@ -12,10 +9,10 @@ namespace FurniflexBE.Models
         public int OrderItemId { get; set; }
 
         [Required(ErrorMessage = "Order ID is required")]
-        public int OrderId { get; set; }
+        public int OrderId { get; set; } // Foreign key to Order
 
         [Required(ErrorMessage = "Product ID is required")]
-        public int ProductId { get; set; }
+        public int ProductId { get; set; } // Foreign key to Product
 
         [Required(ErrorMessage = "Quantity is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]

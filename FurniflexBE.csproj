@@ -246,6 +246,8 @@
     <Compile Include="DTOModels\ChangePasswordDTOModel.cs" />
     <Compile Include="DTOModels\ForgotPasswordDTO.cs" />
     <Compile Include="DTOModels\LoginDTOModel.cs" />
+    <Compile Include="DTOModels\OrderDTO.cs" />
+    <Compile Include="DTOModels\OrderUpdateDTO.cs" />
     <Compile Include="DTOModels\ResetPasswordDTO.cs" />
     <Compile Include="Functions\IdentityHelper.cs" />
     <Compile Include="Global.asax.cs">
@@ -282,6 +284,10 @@
     <Compile Include="Migrations\202409260847546_newColumn_for_User1.cs" />
     <Compile Include="Migrations\202409260847546_newColumn_for_User1.Designer.cs">
       <DependentUpon>202409260847546_newColumn_for_User1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409272113152_modifyOrder.cs" />
+    <Compile Include="Migrations\202409272113152_modifyOrder.Designer.cs">
+      <DependentUpon>202409272113152_modifyOrder.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -383,6 +389,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409260847546_newColumn_for_User1.resx">
       <DependentUpon>202409260847546_newColumn_for_User1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409272113152_modifyOrder.resx">
+      <DependentUpon>202409272113152_modifyOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

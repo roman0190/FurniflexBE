@@ -28,6 +28,18 @@ namespace FurniflexBE.Helpers
             return null;
         }
 
+        public static string GetRoleName(ClaimsIdentity identity)
+        {
+
+            var roleIdClaim = identity.FindFirst("roleName");
+            if (roleIdClaim != null)
+            {
+                return roleIdClaim.Value;
+            }
+
+            return "";
+        }
+
         // Additional helper functions can be added here as needed
     }
 }
