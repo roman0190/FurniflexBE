@@ -6,10 +6,12 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FurniflexBE.Context;
+using FurniflexBE.Helpers;
 using FurniflexBE.Models;
 
 namespace FurniflexBE.Controllers
@@ -45,9 +47,15 @@ namespace FurniflexBE.Controllers
         }
 
         // PUT: api/Categories/5
+        [Authorize]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutCategory(int id, Category category)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (userRole != "admin")
+            {
+                return BadRequest("You are not admin, You cannot manage categories");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,9 +96,15 @@ namespace FurniflexBE.Controllers
         }
 
         // POST: api/Categories
+        [Authorize]
         [ResponseType(typeof(Category))]
         public async Task<IHttpActionResult> PostCategory(Category category)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (userRole != "admin")
+            {
+                return BadRequest("You are not admin, You cannot post categories");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -112,9 +126,15 @@ namespace FurniflexBE.Controllers
 
 
         // DELETE: api/Categories/5
+        [Authorize]
         [ResponseType(typeof(Category))]
         public async Task<IHttpActionResult> DeleteCategory(int id)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (userRole != "admin")
+            {
+                return BadRequest("You are not admin, You cannot delete categories");
+            }
             Category category = await db.categories.FindAsync(id);
             if (category == null)
             {

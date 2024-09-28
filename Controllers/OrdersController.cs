@@ -138,9 +138,19 @@ namespace FurniflexBE.Controllers
             // Map the OrderItems from DTO to the OrderItems in the Order
             foreach (var cart in orderDto.CartItems)
             {
+                var crt = await db.carts.FindAsync(cart.CartId);
                 var prod = await db.products.FindAsync(cart.ProductId);
 
+                if(crt.UserId != userId)
+                {
+                    return BadRequest($"Not Your cart!");
+                }
+
                 if (prod == null)
+                {
+                    return NotFound();
+                }
+                if (crt == null)
                 {
                     return NotFound();
                 }
@@ -163,6 +173,7 @@ namespace FurniflexBE.Controllers
                 };
 
                 order.OrderItems.Add(orderItem);
+                db.carts.Remove(crt);
             }
 
             // Add the order to the database

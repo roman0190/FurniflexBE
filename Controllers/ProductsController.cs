@@ -7,11 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FurniflexBE.Context;
+using FurniflexBE.Helpers;
 using FurniflexBE.Models;
 
 namespace FurniflexBE.Controllers
@@ -40,9 +42,16 @@ namespace FurniflexBE.Controllers
         }
 
         // PUT: api/Products/5
+        [Authorize]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutProduct(int id)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+
+            if (userRole != "admin")
+            {
+                return Unauthorized(); // Returns 401 Unauthorized if the user is not an admin
+            }
             if (!Request.Content.IsMimeMultipartContent())
             {
                 return BadRequest("Invalid request. Expected multipart content.");
@@ -127,10 +136,18 @@ namespace FurniflexBE.Controllers
 
 
         // POST: api/Products
+        [Authorize]
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> PostProduct()
         {
-           
+
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+
+            if (userRole != "admin")
+            {
+                return Unauthorized(); // Returns 401 Unauthorized if the user is not an admin
+            }
+
             Product product = new Product();
 
             try
@@ -204,9 +221,16 @@ namespace FurniflexBE.Controllers
 
 
         // DELETE: api/Products/5
+        [Authorize]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> DeleteProduct(int id)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+
+            if (userRole != "admin")
+            {
+                return Unauthorized(); // Returns 401 Unauthorized if the user is not an admin
+            }
             Product product = await db.products.FindAsync(id);
             if (product == null)
             {

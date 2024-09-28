@@ -142,10 +142,10 @@ namespace FurniflexBE.Controllers
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
+            var jwt_token = GetToken(user);
             db.users.Add(user);
             await db.SaveChangesAsync();
 
-            var jwt_token = GetToken(user);
 
             var response = new
             {
@@ -218,7 +218,7 @@ namespace FurniflexBE.Controllers
                 new Claim("valid", "1"),
                 new Claim("userid", user.UserId.ToString()),
                 new Claim("roleId", user.RoleId.ToString()), // Include RoleId
-                new Claim("roleName", user.Role?.Name) // Include RoleName, assuming Role is an object with RoleName property
+                new Claim("roleName", user.Role.Name) // Include RoleName, assuming Role is an object with RoleName property
             };
 
             // Create Security Token object by giving required parameters    

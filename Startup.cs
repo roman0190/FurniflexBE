@@ -28,7 +28,8 @@ namespace FurniflexBE
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = "http://furniflex.com", //some string, normally web url,  
                             ValidAudience = "http://furniflex.com",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my_super_secret_key_1234567890123456"))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my_super_secret_key_1234567890123456")),
+                        RoleClaimType = "roleName",
                     }
                 });
         }

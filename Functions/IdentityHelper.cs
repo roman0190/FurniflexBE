@@ -30,15 +30,17 @@ namespace FurniflexBE.Helpers
 
         public static string GetRoleName(ClaimsIdentity identity)
         {
-
-            var roleIdClaim = identity.FindFirst("roleName");
-            if (roleIdClaim != null)
+      
+            var roleNameClaim = identity.FindFirst("roleName");
+            if (roleNameClaim != null)
             {
-                return roleIdClaim.Value;
+                System.Diagnostics.Debug.WriteLine("Role Name Claim: " + roleNameClaim.Value);
+                return roleNameClaim.Value;
             }
 
             return "";
         }
+
 
         // Additional helper functions can be added here as needed
     }

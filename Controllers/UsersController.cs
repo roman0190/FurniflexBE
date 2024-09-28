@@ -16,17 +16,29 @@ using FurniflexBE.Models;
 using BCrypt.Net;
 using FurniflexBE.DTOModels;
 using System.Data.Entity.Validation;
+using FurniflexBE.Helpers;
+using System.Security.Claims;
 
 namespace FurniflexBE.Controllers
 {
+    [Authorize]
     public class UsersController : ApiController
     {
         private AppDbContext db = new AppDbContext();
 
         // GET: api/Users
-        public IQueryable<User> Getusers()
+        [HttpGet]
+        [ResponseType(typeof(User))]
+        public IHttpActionResult Getusers()
         {
-            return db.users;
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            
+            if ( userRole != "admin")
+            {
+                return BadRequest("You are not admin, You cannot see all users");
+            }
+            var users =  db.users.ToList();
+            return Ok(users);
         }
 
         // GET: api/Users/5  using..........
@@ -35,6 +47,16 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(int id)
         {
+            var identityId = IdentityHelper.GetUserId(User.Identity as ClaimsIdentity);
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (identityId == null)
+            {
+                return Unauthorized();
+            }
+            if (id != identityId && userRole != "admin")
+            {
+                return BadRequest("You are not admin, nor is it your account. You cannot get the user data");
+            }
             // Find the user by ID
             User user = await db.users.FindAsync(id);
             if (user == null)
@@ -46,6 +68,7 @@ namespace FurniflexBE.Controllers
 
 
         // GET: api/Users/{id:int}/Image
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/Users/{id:int}/Image")]
         public IHttpActionResult GetUserImage(int id)
@@ -82,6 +105,16 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutUser(int id)
         {
+            var identityId = IdentityHelper.GetUserId(User.Identity as ClaimsIdentity);
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (identityId == null)
+            {
+                return Unauthorized();
+            }
+            if (id != identityId && userRole != "admin")
+            {
+                return BadRequest("You are not admin, nor is it your account. You cannot edit");
+            }
             var user = await db.users.FindAsync(id);
             if (user == null)
             {
@@ -113,8 +146,8 @@ namespace FurniflexBE.Controllers
             user.FirstName = httpRequest.Form["FirstName"];
             user.LastName = httpRequest.Form["LastName"];
             user.Email = httpRequest.Form["Email"];
-            user.Phone = httpRequest.Form["phone"];
-            user.Location = httpRequest.Form["location"];
+            user.Phone = httpRequest.Form["Phone"];
+            user.Location = httpRequest.Form["Location"];
 
             if (!ModelState.IsValid)
             {
@@ -167,6 +200,16 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> DeleteUser(int id)
         {
+            var identityId = IdentityHelper.GetUserId(User.Identity as ClaimsIdentity);
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (identityId == null)
+            {
+                return Unauthorized();
+            }
+            if (id != identityId && userRole != "admin")
+            {
+                return BadRequest("You are not admin, nor is it your account. You cannot delete");
+            }
             User user = await db.users.FindAsync(id);
             if (user == null)
             {

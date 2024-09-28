@@ -6,30 +6,43 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FurniflexBE.Context;
+using FurniflexBE.Helpers;
 using FurniflexBE.Models;
 
 namespace FurniflexBE.Controllers
 {
+    
     public class RolesController : ApiController
     {
         private AppDbContext db = new AppDbContext();
 
         // GET: api/Roles
+        [AllowAnonymous]
         public IQueryable<Role> GetRoles()
         {
             return db.roles;
         }
 
-       
+
 
         // PUT: api/Roles/5
+        [Authorize]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutRole(int id, Role role)
         {
+         
+
+            var identity = User.Identity as ClaimsIdentity;
+            var roleClaim = identity?.FindFirst("roleName");
+            if (roleClaim == null || roleClaim.Value != "admin")
+            {
+                return BadRequest($"User Role is {roleClaim.Value}. and not 'admin'. User cannot do the action");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -62,9 +75,16 @@ namespace FurniflexBE.Controllers
         }
 
         // POST: api/Roles
+
         [ResponseType(typeof(Role))]
         public async Task<IHttpActionResult> PostRole(Role role)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+
+            if (userRole != "admin")
+            {
+                return Unauthorized(); // Returns 401 Unauthorized if the user is not an admin
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
