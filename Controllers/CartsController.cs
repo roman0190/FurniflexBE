@@ -14,6 +14,7 @@ using FurniflexBE.Models;
 
 namespace FurniflexBE.Controllers
 {
+    [Authorize]
     public class CartsController : ApiController
     {
         private AppDbContext db = new AppDbContext();
@@ -138,6 +139,23 @@ namespace FurniflexBE.Controllers
             });
         }
 
+        // DELETE: api/Carts/DeleteByUserId/5
+        [HttpDelete]
+        [Route("api/Carts/DeleteByUserId/{userId}")]
+        public async Task<IHttpActionResult> DeleteCartByUserId(int userId)
+        {
+            var carts = db.carts.Where(c => c.UserId == userId).ToList();
+
+            if (!carts.Any())
+            {
+                return NotFound();
+            }
+
+            db.carts.RemoveRange(carts);
+            await db.SaveChangesAsync();
+
+            return Ok("Cart items deleted successfully.");
+        }
 
         // DELETE: api/Carts/5
         [ResponseType(typeof(Cart))]
