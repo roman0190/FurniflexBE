@@ -113,6 +113,11 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(Order))]
         public async Task<IHttpActionResult> PostOrder([FromBody] OrderDTO orderDto)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (userRole == "admin")
+            {
+                return BadRequest($"User Role is {userRole}. and admin cannot place an order");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

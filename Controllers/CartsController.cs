@@ -114,6 +114,11 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(Cart))]
         public async Task<IHttpActionResult> PostCart(Cart cart)
         {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+            if (userRole == "admin")
+            {
+                return BadRequest($"User Role is {userRole}. and admin cannot add to cart");
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
