@@ -189,10 +189,27 @@ namespace FurniflexBE.Controllers
         }
 
 
+        //GET:api/Users/TotalUserCount
+        [HttpGet]
+        [Route("api/Users/TotalUserCount")]
+        public IHttpActionResult GetTotalUserCount()
+        {
+            var userCount = db.users.Count();
 
+            return Ok(userCount);
+        }
 
+        //GET:api/Users/UserCreatedAtData
+        [HttpGet]
+        [Route("api/Users/UserCreatedAtData")]
+        public IHttpActionResult GetUserCreatedAtData()
+        {
+            var userCreatedAtData = db.users
+                .Select(u => u.CreatedAt)
+                .ToList();
 
-
+            return Ok(userCreatedAtData);
+        }
 
         // DELETE: api/Users/5
         [HttpDelete]
@@ -221,6 +238,7 @@ namespace FurniflexBE.Controllers
 
             return Ok(user);
         }
+
 
         protected override void Dispose(bool disposing)
         {

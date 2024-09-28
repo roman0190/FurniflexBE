@@ -275,6 +275,15 @@ namespace FurniflexBE.Controllers
             return ResponseMessage(result);
         }
 
+        // GET: api/Products/Count
+        [HttpGet]
+        [Route("api/Products/Count")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult GetProductCount()
+        {
+            var productCount = db.products.Count();
+            return Ok(productCount);
+        }
 
         protected override void Dispose(bool disposing)
         {

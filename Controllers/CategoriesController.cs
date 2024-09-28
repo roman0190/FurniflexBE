@@ -147,6 +147,19 @@ namespace FurniflexBE.Controllers
             return Ok(category);
         }
 
+        // New API to count categories
+        // GET: api/Categories/Count
+        [HttpGet]
+        [Route("api/Categories/Count")] 
+        public IHttpActionResult GetCategoryCount()
+        {
+            
+            int categoryCount = db.categories.Count();
+
+            
+            return Ok(new { count = categoryCount });
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

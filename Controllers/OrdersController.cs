@@ -193,10 +193,47 @@ namespace FurniflexBE.Controllers
         }
 
 
+        // GET: api/Orders/TotalSales
+        [HttpGet, Route("api/Orders/TotalSales")]
+        public IHttpActionResult GetTotalSales()
+        {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+
+            if (userRole != "admin")
+            {
+                return Unauthorized();
+            }
+
+            decimal totalSales = db.orders.Sum(order => order.TotalPrice);
+
+            return Ok(new { TotalSales = totalSales }); // Return the total sales
+        }
+
+        // GET: api/Orders/SalesData
+        [HttpGet, Route("api/Orders/SalesData")]
+        public IHttpActionResult GetSalesData()
+        {
+            var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
+
+            if (userRole != "admin")
+            {
+                return Unauthorized(); 
+            }
+
+            var salesData = db.orders
+                              .Select(order => new
+                              {
+                                  CreatedAt = order.CreatedAt,
+                                  TotalPrice = order.TotalPrice
+                              })
+                              .OrderBy(order => order.CreatedAt) 
+                              .ToList();
+
+            return Ok(salesData); 
+        }
 
 
 
-        
 
         protected override void Dispose(bool disposing)
         {
