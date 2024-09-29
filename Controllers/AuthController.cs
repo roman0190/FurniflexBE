@@ -142,10 +142,10 @@ namespace FurniflexBE.Controllers
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-            var jwt_token = GetToken(user);
             db.users.Add(user);
             await db.SaveChangesAsync();
 
+            var jwt_token = GetToken(user);
 
             var response = new
             {
