@@ -289,6 +289,10 @@
     <Compile Include="Migrations\202409272113152_modifyOrder.Designer.cs">
       <DependentUpon>202409272113152_modifyOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409290608525_addDate.cs" />
+    <Compile Include="Migrations\202409290608525_addDate.Designer.cs">
+      <DependentUpon>202409290608525_addDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -392,6 +396,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409272113152_modifyOrder.resx">
       <DependentUpon>202409272113152_modifyOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409290608525_addDate.resx">
+      <DependentUpon>202409290608525_addDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

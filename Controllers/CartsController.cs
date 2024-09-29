@@ -114,6 +114,12 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(Cart))]
         public async Task<IHttpActionResult> PostCart(Cart cart)
         {
+            var identityId = IdentityHelper.GetUserId(User.Identity as ClaimsIdentity);
+
+            if (identityId == null)
+            {
+                return Unauthorized();
+            }
             var userRole = IdentityHelper.GetRoleName(User.Identity as ClaimsIdentity);
             if (userRole == "admin")
             {
@@ -123,7 +129,7 @@ namespace FurniflexBE.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            cart.UserId = (int)identityId;
             // Add the cart to the database
             db.carts.Add(cart);
             await db.SaveChangesAsync();

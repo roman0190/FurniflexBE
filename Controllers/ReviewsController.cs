@@ -23,6 +23,23 @@ namespace FurniflexBE.Controllers
         {
             return db.reviews;
         }
+        // GET: api/Reviews/product/{productId}
+        [HttpGet]
+        [Route("api/Reviews/Product/{productId}")]
+        [ResponseType(typeof(IEnumerable<Review>))]
+        public async Task<IHttpActionResult> GetReviewsByProduct(int productId)
+        {
+            var reviews = await db.reviews.Where(r => r.ProductId == productId).ToListAsync();
+
+            if (reviews == null || !reviews.Any())
+            {
+                return NotFound(); // No reviews found for the product
+            }
+
+            return Ok(reviews);
+        }
+
+
 
         // GET: api/Reviews/5
         [ResponseType(typeof(Review))]
@@ -38,6 +55,7 @@ namespace FurniflexBE.Controllers
         }
 
         // PUT: api/Reviews/5
+        [HttpPut]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutReview(int id, Review review)
         {
@@ -46,46 +64,81 @@ namespace FurniflexBE.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != review.ReviewId)
+            // Find the existing review by review id
+            var existingReview = await db.reviews.FindAsync(id);
+
+            if (existingReview == null)
             {
-                return BadRequest();
+                return NotFound(); // Review not found
             }
 
-            db.Entry(review).State = EntityState.Modified;
+            // Check if the review belongs to the authenticated user
+            var user = await db.users.FindAsync(review.UserId);
 
-            try
+            if (existingReview.UserId != review.UserId)
             {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReviewExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Unauthorized(); // User can only edit their own review
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            // Ensure the user has at least one order where the product exists and the status is "Delivered"
+            var hasDeliveredOrder = user.Orders
+                                        .Any(order => order.OrderItems
+                                                           .Any(p => p.ProductId == review.ProductId)
+                                                    && order.OrderStatus == "Delivered");
+
+            if (!hasDeliveredOrder)
+            {
+                return BadRequest("You can only review products that you have ordered and that have been delivered.");
+            }
+
+            // Update the review's content
+            existingReview.Rating = review.Rating;
+            existingReview.Comment = review.Comment;
+           
+
+            db.Entry(existingReview).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+
+            return StatusCode(HttpStatusCode.NoContent); // Success, but no content is returned
         }
-
         // POST: api/Reviews
+        [Authorize]
         [ResponseType(typeof(Review))]
         public async Task<IHttpActionResult> PostReview(Review review)
         {
+            // Check if the model state is valid
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            // Find the user by the UserId from the review
+            var user = await db.users.FindAsync(review.UserId);
+
+            // Check if the user exists
+            if (user == null)
+            {
+                return NotFound(); // Return 404 if user not found
+            }
+
+           
+            // Check if the user has already submitted a review for this product
+            var existingReview = user.Reviews.FirstOrDefault(r => r.ProductId == review.ProductId);
+
+            if (existingReview != null)
+            {
+                // Return a custom response indicating the user already reviewed this product
+                return BadRequest("You have already submitted a review for this product.");
+            }
+
+            // Add the new review since no existing review for the product was found
             db.reviews.Add(review);
             await db.SaveChangesAsync();
 
+            // Return the newly created review
             return CreatedAtRoute("DefaultApi", new { id = review.ReviewId }, review);
         }
+
 
         // DELETE: api/Reviews/5
         [ResponseType(typeof(Review))]

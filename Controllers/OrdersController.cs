@@ -146,10 +146,7 @@ namespace FurniflexBE.Controllers
                 var crt = await db.carts.FindAsync(cart.CartId);
                 var prod = await db.products.FindAsync(cart.ProductId);
 
-                if(crt.UserId != userId)
-                {
-                    return BadRequest($"Not Your cart!");
-                }
+               
 
                 if (prod == null)
                 {
