@@ -86,10 +86,7 @@ namespace FurniflexBE.Controllers
                                                            .Any(p => p.ProductId == review.ProductId)
                                                     && order.OrderStatus == "Delivered");
 
-            if (!hasDeliveredOrder)
-            {
-                return BadRequest("You can only review products that you have ordered and that have been delivered.");
-            }
+           
 
             // Update the review's content
             existingReview.Rating = review.Rating;
@@ -129,6 +126,17 @@ namespace FurniflexBE.Controllers
             {
                 // Return a custom response indicating the user already reviewed this product
                 return BadRequest("You have already submitted a review for this product.");
+            }
+
+            // Ensure the user has at least one order where the product exists and the status is "Delivered"
+            var hasDeliveredOrder = user.Orders
+                                        .Any(order => order.OrderItems
+                                                           .Any(p => p.ProductId == review.ProductId)
+                                                    && order.OrderStatus == "Delivered");
+
+            if (!hasDeliveredOrder)
+            {
+                return BadRequest("You can only review products that you have ordered and that have been delivered.");
             }
 
             // Add the new review since no existing review for the product was found
