@@ -275,6 +275,38 @@ namespace FurniflexBE.Controllers
             return ResponseMessage(result);
         }
 
+        // GET: api/Products/LowStock
+        [Authorize]
+        [HttpGet]
+        [Route("api/Products/LowStock")]
+        [ResponseType(typeof(List<LowStockProductDto>))]
+        public async Task<IHttpActionResult> GetLowStockProducts()
+        {
+           
+            var lowStockProducts = await db.products
+                .Where(p => p.Quantity < 2)
+                .Select(p => new LowStockProductDto
+                {
+                    Name = p.Name,
+                    Quantity = p.Quantity
+                })
+                .ToListAsync();
+
+            if (!lowStockProducts.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(lowStockProducts);
+        }
+
+        // DTO class for Low Stock Products will shift later in the DTO
+        public class LowStockProductDto
+        {
+            public string Name { get; set; }
+            public int Quantity { get; set; }
+        }
+
         // GET: api/Products/Count
         [HttpGet]
         [Route("api/Products/Count")]
