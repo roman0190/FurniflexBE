@@ -145,7 +145,10 @@ namespace FurniflexBE.Controllers
             db.users.Add(user);
             await db.SaveChangesAsync();
 
-            var jwt_token = GetToken(user);
+            var newUser = await db.users.FindAsync(user.UserId);
+            
+
+            var jwt_token = GetToken(newUser);
 
             var response = new
             {
