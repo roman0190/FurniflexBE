@@ -20,7 +20,12 @@ namespace FurniflexBE.Controllers
     [Authorize]
     public class OrdersController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public OrdersController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/Orders
         public IHttpActionResult GetOrders()

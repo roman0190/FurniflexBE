@@ -20,7 +20,12 @@ namespace FurniflexBE.Controllers
 {
     public class ProductsController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public ProductsController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/Products using this................don't touch
         public IQueryable<Product> Getproducts()

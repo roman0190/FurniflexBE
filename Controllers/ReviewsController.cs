@@ -16,7 +16,12 @@ namespace FurniflexBE.Controllers
 {
     public class ReviewsController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public ReviewsController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/Reviews
         public IQueryable<Review> Getreviews()

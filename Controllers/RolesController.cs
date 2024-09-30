@@ -19,7 +19,12 @@ namespace FurniflexBE.Controllers
     
     public class RolesController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public RolesController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/Roles
         [AllowAnonymous]

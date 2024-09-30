@@ -19,7 +19,12 @@ namespace FurniflexBE.Controllers
     [Authorize]
     public class CartsController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public CartsController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/Carts
         [HttpGet]

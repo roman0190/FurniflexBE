@@ -16,7 +16,12 @@ namespace FurniflexBE.Controllers
 {
     public class OrderItemsController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public OrderItemsController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/OrderItems
         public IQueryable<OrderItem> GetorderItems()

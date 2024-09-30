@@ -24,7 +24,12 @@ namespace FurniflexBE.Controllers
     [Authorize]
     public class UsersController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private AppDbContext db;
+
+        public UsersController()
+        {
+            db = new AppDbContext();
+        }
 
         // GET: api/Users
         [HttpGet]
