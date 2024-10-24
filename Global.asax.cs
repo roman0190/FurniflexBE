@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FurniflexBE.Context;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -25,6 +27,8 @@ namespace FurniflexBE
                         .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             GlobalConfiguration.Configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);
+
+            Database.SetInitializer(new AppDbInitializer());
 
         }
     }

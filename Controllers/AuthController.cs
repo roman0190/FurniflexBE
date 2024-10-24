@@ -132,13 +132,27 @@ namespace FurniflexBE.Controllers
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> Register(User user)
         {
-            user.RoleId = 2; // Example role ID
-            var userRole = await db.roles.FindAsync(user.RoleId);
-            user.Role = userRole;
+           
+           
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            // Check if there are no users in the database
+            var isFirstUser = !db.users.Any();
+
+            // If no users exist, assign admin role, else assign default customer role
+            if (isFirstUser)
+            {
+                user.RoleId = 1; // Assign Admin role ID (you can change this as needed)
+            }
+            else
+            {
+                user.RoleId = 2; // Default role ID (customer)
+            }
+
+            var userRole = await db.roles.FindAsync(user.RoleId);
+            user.Role = userRole;
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
