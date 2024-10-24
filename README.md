@@ -7,9 +7,7 @@ The frontend of this project is built with **Next.js 14**. You can find the fron
 
 ## Demo Video of frontend
 
-[![FurniFlex Demo](https://github.com/roman0190/FurniFlex-FE/raw/main/FurniFlex_Demo_HomePage.png)](https://github.com/roman0190/FurniFlex-FE/raw/main/FurniFlex_Demo.mp4)
-
-
+https://github.com/user-attachments/assets/c4f01e3a-f060-49d1-a06c-5a475cbe3562
 
 
 ## Features
